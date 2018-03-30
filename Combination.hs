@@ -1,8 +1,11 @@
 module Combination where
 
+import Control.Parallel.Strategies
 import Data.List
 import NumUtility 
 import Data.List.Split
+import Control.Parallel
+import Control.Concurrent
 
 --Regular factorial definition
 factorial::Int->Int
@@ -31,8 +34,8 @@ findTwaySequences t xs = filter (\ys -> length ys == t) (subsequences xs)
 
 countTwaySequences t xs = length (findTwaySequences t xs)
 
-findAllTwaySequences t (x:[]) = findTwaySequences t x
-findAllTwaySequences t (x:xs) = nub (findTwaySequences t x ++ findAllTwaySequences t xs)
+findAllTwaySequences t xs = parMap rdeepseq (findTwaySequences t) xs
 
-measureTwayCoverage t xs ys = percent (length (findAllTwaySequences t xs)) (getTwaySequenceCount ys t)
+measureTwayCoverage t xs ys = percent (length (nub (concat (findAllTwaySequences t xs)))) (getTwaySequenceCount ys t)
+
 

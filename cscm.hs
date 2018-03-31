@@ -1,4 +1,3 @@
-import Control.Concurrent
 import Control.Monad
 import Combination
 import Data.List.Split
@@ -6,8 +5,8 @@ import System.Environment
 import Control.Parallel
 
 printUsage = do
-	print "USAGE: cscm [tway] [testsuite.txt] [parameter names] +RTS -N[numProcessors]"
-        print "Example: cscm 3 testsuite.txt parameters.txt +RTS -N4"
+	print "USAGE: cscm [tway] [testsuite.txt] [event names] +RTS -N[numProcessors]"
+        print "Example: cscm 3 testsuite.txt events.txt +RTS -N4"
 
 main = do 
 	args <- getArgs

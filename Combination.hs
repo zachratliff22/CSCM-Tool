@@ -5,7 +5,6 @@ import Data.List
 import NumUtility 
 import Data.List.Split
 import Control.Parallel
-import Control.Concurrent
 import Distribution.Simple.Utils
 
 --Regular factorial definition

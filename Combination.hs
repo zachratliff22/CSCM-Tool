@@ -6,6 +6,7 @@ import NumUtility
 import Data.List.Split
 import Control.Parallel
 import Control.Concurrent
+import Distribution.Simple.Utils
 
 --Regular factorial definition
 factorial::Int->Int
@@ -32,10 +33,8 @@ getTwaySequenceCount xs t = (getTwayCombinationCount xs t) * factorial t
 
 findTwaySequences t xs = filter (\ys -> length ys == t) (subsequences xs) 
 
-countTwaySequences t xs = length (findTwaySequences t xs)
-
 findAllTwaySequences t xs = parMap rdeepseq (findTwaySequences t) xs
 
-measureTwayCoverage t xs ys = percent (length (nub (concat (findAllTwaySequences t xs)))) (getTwaySequenceCount ys t)
+measureTwayCoverage t xs ys = percent (length (ordNub (concat (findAllTwaySequences t xs)))) (getTwaySequenceCount ys t)
 
 

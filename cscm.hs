@@ -1,5 +1,8 @@
-import Control.Monad
+-- user files
 import Combination
+
+-- Haskell libraries
+import Control.Monad
 import Data.List.Split
 import System.Environment
 import Control.Parallel

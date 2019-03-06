@@ -1,12 +1,14 @@
 module Combination where
 
+-- User files
+import Utility 
+
+-- Haskell libraries
 import Control.Parallel.Strategies
 import Data.List
-import NumUtility 
 import Data.List.Split
 import Control.Parallel
 import Distribution.Simple.Utils
-import qualified Data.Set as S
 
 -- Regular factorial definition
 factorial::Int->Int
@@ -21,44 +23,49 @@ factorial' n k
 	| otherwise = n * factorial' (n-1) k
 
 -- Performs n choose k operation using the reduced factorial definition
+-- Example: (n choose k) = [ n! / ((n - k)!k!)] = [ n*(n-1)*...*(n-k+1) / k! ]
 nchoosek::Int->Int->Int
 nchoosek n k = a `div` b where a = factorial' n (n-k)
 			       b = factorial k
 
 -- Gets the number of t-way combinations from a list of symbols
+-- Example: getTwayCombinationCount 2 [a,b,c] 
+-- Returns: 3
 getTwayCombinationCount::[a]->Int->Int
-getTwayCombinationCount xs t = nchoosek (length xs) t
+getTwayCombinationCount t xs = nchoosek (length xs) t
 
 -- Gets the number of t-way permutations from a list of symbols
+-- Formula: (n choose t) * t!
+-- Example: getTwaySequenceCount 2 [a,b,c]
+-- Returns: 6
 getTwaySequenceCount::[a]->Int->Int
-getTwaySequenceCount xs t = (getTwayCombinationCount xs t) * factorial t 
+getTwaySequenceCount t xs = (getTwayCombinationCount xs t) * factorial t 
 
--- finds all the t-way sequences in a single test
+-- Finds all the t-way sequences in a single test
+-- Example: findTwaySequences 2 [a,b,c] 
+-- Returns: [[a,b],[a,c],[b,c]]
 findTwaySequences t xs = filter (\ys -> length ys == t) (subsequences xs)
 
--- gets all the t-way sequences from a list of symbols
+-- Gets all the t-way sequences from a list of symbols
+-- Example: getAllTwaySequences 2 [a,b,c]
+-- Returns: [[a,b],[a,c],[b,c],[c,b],[c,a],[b,a]]
 getAllTwaySequences t (x:[]) = [s | s <- permutations x]
 getAllTwaySequences t (x:xs) = [s | s <- permutations x] ++ (getAllTwaySequences t xs)  
 
--- finds all the t-way sequences in a list of tests
+-- Finds all the t-way sequences in a list of tests
+-- Example: findAllTwaySequences 2 [[a,b,c],[a,c,b]]
+-- Returns: [[a,b],[a,c],[b,c],[c,b]]
 findAllTwaySequences t xs = parMap rdeepseq (findTwaySequences t) xs
 
--- return list of elements in xs that are not in ys
--- Example: uniqueElements [1,2,3,4] [1,2] 
--- returns: [3,4]
-uniqueElements xs ys = S.toList $ S.difference (S.fromList xs) (S.fromList ys)
 
--- return a list of all the missing sequences from the list of tests
--- Example: findMissingSequences 3 [1,2,3,4,5] [[1,2,3,4,5],[5,4,3,2,1]]
+-- Return a list of all the missing sequences from the list of tests
+-- Example: findMissingSequences 2 [a,b,c] [[a,b,c],[a,c,b]]
+-- Returns: [[c,a],[b,a]]
 findMissingSequences t xxs yys = uniqueElements (getAllTwaySequences t (findTwaySequences t xxs)) (concat (findAllTwaySequences t yys))
 
-
--- checks whether 'a' comes before 'b' in the list
-constraintCheck a b (x:xs) | a == x = True
-                           | b == x = False
-                           | otherwise = constraintCheck a b xs
-
--- Takes in a integer, a list of tests, and a list of symbols
+-- Takes in a integer t, a list of tests, and a list of symbols, and returns the t-way coverage of the tests
+-- Example: measureTwayCoverage 2 [[a,b,c],[a,c,b]] [a,b,c]
+-- Returns: 2-way coverage: 66.66667%
 measureTwayCoverage t xs ys = percent (length (ordNub (concat (findAllTwaySequences t xs)))) (getTwaySequenceCount ys t)
 
 

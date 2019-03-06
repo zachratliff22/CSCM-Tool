@@ -9,6 +9,7 @@ import Data.List
 import Data.List.Split
 import Control.Parallel
 import Distribution.Simple.Utils
+import qualified Data.Set as S
 
 -- Regular factorial definition
 factorial::Int->Int
@@ -57,7 +58,6 @@ getAllTwaySequences t (x:xs) = [s | s <- permutations x] ++ (getAllTwaySequences
 -- Returns: [[a,b],[a,c],[b,c],[c,b]]
 findAllTwaySequences t xs = parMap rdeepseq (findTwaySequences t) xs
 
-
 -- Return a list of all the missing sequences from the list of tests
 -- Example: findMissingSequences 2 [a,b,c] [[a,b,c],[a,c,b]]
 -- Returns: [[c,a],[b,a]]
@@ -67,5 +67,3 @@ findMissingSequences t xxs yys = uniqueElements (getAllTwaySequences t (findTway
 -- Example: measureTwayCoverage 2 [[a,b,c],[a,c,b]] [a,b,c]
 -- Returns: 2-way coverage: 66.66667%
 measureTwayCoverage t xs ys = percent (length (ordNub (concat (findAllTwaySequences t xs)))) (getTwaySequenceCount ys t)
-
-

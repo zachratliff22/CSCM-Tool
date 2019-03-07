@@ -1,11 +1,13 @@
 -- user files
 import Combination
+import Utility
 
 -- Haskell libraries
 import Control.Monad
 import Data.List.Split
 import System.Environment
 import Control.Parallel
+import System.IO
 
 printUsage = do
 	print "USAGE: cscm [tway] [testsuite.txt] [event names] +RTS -N[numProcessors]"
@@ -19,6 +21,7 @@ main = do
 	else if null args
 		then printUsage
 	else do
+		outh <- openFile "missingSequences.txt" WriteMode
 		content <- readFile (args !! 1)
 		let tests = lines content
 		parameters <- readFile (args !! 2)
@@ -26,6 +29,10 @@ main = do
 		let p = splitOn "," (params !! 0)
 		let testsuite = map (splitOn ",") tests
 		let tway = read (args !! 0) :: Int
-		let coverage = measureTwayCoverage tway testsuite p
-		putStrLn (show tway ++ "-way coverage: " ++ show coverage ++ "%")
-		
+		let missing = findMissingSequences tway p testsuite
+		hPutStrLn outh $ cleanString $ unlines $ map show missing
+		let totalSeq = getTwaySequenceCount tway p
+		let coverage = percent (totalSeq - (length missing)) totalSeq
+		putStrLn ("\n================== CSCM OUTPUT ==================\n")
+		putStrLn (show tway ++ "-way coverage: " ++ show coverage ++ "%\n")
+        putStrLn "Missing sequences output to: missingSequences.txt" 

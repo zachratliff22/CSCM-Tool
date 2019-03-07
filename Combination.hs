@@ -32,15 +32,15 @@ nchoosek n k = a `div` b where a = factorial' n (n-k)
 -- Gets the number of t-way combinations from a list of symbols
 -- Example: getTwayCombinationCount 2 [a,b,c] 
 -- Returns: 3
-getTwayCombinationCount::[a]->Int->Int
+getTwayCombinationCount::Int->[a]->Int
 getTwayCombinationCount t xs = nchoosek (length xs) t
 
 -- Gets the number of t-way permutations from a list of symbols
 -- Formula: (n choose t) * t!
 -- Example: getTwaySequenceCount 2 [a,b,c]
 -- Returns: 6
-getTwaySequenceCount::[a]->Int->Int
-getTwaySequenceCount t xs = (getTwayCombinationCount xs t) * factorial t 
+getTwaySequenceCount::Int->[a]->Int
+getTwaySequenceCount t xs = (getTwayCombinationCount t xs) * factorial t 
 
 -- Finds all the t-way sequences in a single test
 -- Example: findTwaySequences 2 [a,b,c] 
@@ -66,4 +66,4 @@ findMissingSequences t xxs yys = uniqueElements (getAllTwaySequences t (findTway
 -- Takes in a integer t, a list of tests, and a list of symbols, and returns the t-way coverage of the tests
 -- Example: measureTwayCoverage 2 [[a,b,c],[a,c,b]] [a,b,c]
 -- Returns: 2-way coverage: 66.66667%
-measureTwayCoverage t xs ys = percent (length (ordNub (concat (findAllTwaySequences t xs)))) (getTwaySequenceCount ys t)
+measureTwayCoverage t xs ys = percent (length (ordNub (concat (findAllTwaySequences t xs)))) (getTwaySequenceCount t ys)

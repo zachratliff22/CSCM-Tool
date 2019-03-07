@@ -20,3 +20,8 @@ uniqueElements xs ys = S.toList $ S.difference (S.fromList xs) (S.fromList ys)
 constraintCheck a b (x:xs) | a == x = True
                            | b == x = False
                            | otherwise = constraintCheck a b xs
+                           
+-- Removes brackets and quotes from a string
+-- Example: removeBrackets "[\"a\",\"b\"]"
+-- Result: "a,b"
+cleanString xs = [x | x <- xs, not (elem x "[]\"")]

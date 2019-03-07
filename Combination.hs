@@ -9,7 +9,6 @@ import Data.List
 import Data.List.Split
 import Control.Parallel
 import Distribution.Simple.Utils
-import qualified Data.Set as S
 
 -- Regular factorial definition
 factorial::Int->Int

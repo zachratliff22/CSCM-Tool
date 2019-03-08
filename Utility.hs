@@ -22,6 +22,6 @@ constraintCheck a b (x:xs) | a == x = True
                            | otherwise = constraintCheck a b xs
                            
 -- Removes brackets and quotes from a string
--- Example: removeBrackets "[\"a\",\"b\"]"
+-- Example: cleanString "[\"a\",\"b\"]"
 -- Result: "a,b"
 cleanString xs = [x | x <- xs, not (elem x "[]\"")]
